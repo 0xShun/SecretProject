@@ -1,110 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Update</title>
-    <!-- Latest Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Axios -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Profile Information</h3>
-                    </div>
-                    <div class="card-body">
-                        <div id="alertContainer"></div>
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block local_css %} 
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Profile Information</h3>
+                </div>
+                <div class="card-body">
+                    <div id="alertContainer"></div>
+                    
+                    <form id="profileForm" onsubmit="handleProfileSubmit(event)">
+                        {% csrf_token %}
                         
-                        <form id="profileForm" onsubmit="handleProfileSubmit(event)">
-                            {% csrf_token %}
-                            
-                            <div class="mb-3">
-                                <label for="first_name" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user_credential.user_profile.first_name }}" required>
-                            </div>
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user_credential.user_profile.first_name }}" required>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="middle_name" class="form-label">Middle Name</label>
-                                <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{ user_credential.user_profile.middle_name|default:'' }}">
-                            </div>
+                        <div class="mb-3">
+                            <label for="middle_name" class="form-label">Middle Name</label>
+                            <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{ user_credential.user_profile.middle_name|default:'' }}">
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="last_name" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user_credential.user_profile.last_name }}" required>
-                            </div>
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user_credential.user_profile.last_name }}" required>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="birthdate" class="form-label">Birthdate</label>
-                                <input type="date" class="form-control" id="birthdate" name="birthdate" value="{{ user_credential.user_profile.birthdate|date:'Y-m-d' }}" required>
-                            </div>
+                        <div class="mb-3">
+                            <label for="birthdate" class="form-label">Birthdate</label>
+                            <input type="date" class="form-control" id="birthdate" name="birthdate" value="{{ user_credential.user_profile.birthdate|date:'Y-m-d' }}" required>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" value="{{ user_credential.email }}" disabled>
-                            </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ user_credential.email }}" disabled>
+                        </div>
 
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Update Profile</button>
-                            </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </div>
 
-                            <div class="text-center mt-3">
-                                <a href="{% url 'change_password' %}" class="text-decoration-none">Change Password</a>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="text-center mt-3">
+                            <a href="{% url 'change_password' %}" class="text-decoration-none">Change Password</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Latest Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Latest Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        function showAlert(message, type) {
-            const alertContainer = document.getElementById('alertContainer');
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
-            alertDiv.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            `;
-            alertContainer.appendChild(alertDiv);
-            
-            // Auto dismiss after 5 seconds
-            setTimeout(() => {
-                alertDiv.remove();
-            }, 5000);
-        }
+<script>
+    function showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        alertContainer.appendChild(alertDiv);
+        
+        // Auto dismiss after 5 seconds
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
 
-        async function handleProfileSubmit(event) {
-            event.preventDefault();
-            
-            const form = event.target;
-            const formData = new FormData(form);
-            
-            try {
-                const response = await axios.post('{% url "update_profile" %}', formData, {
-                    headers: {
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                
-                if (response.data.success) {
-                    showAlert(response.data.message, 'success');
-                } else {
-                    showAlert(response.data.message || 'An error occurred', 'danger');
+    async function handleProfileSubmit(event) {
+        event.preventDefault();
+        
+        const form = event.target;
+        const formData = new FormData(form);
+        
+        try {
+            const response = await axios.post('{% url "update_profile" %}', formData, {
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'Content-Type': 'multipart/form-data'
                 }
-            } catch (error) {
-                showAlert(error.response?.data?.message || 'An error occurred while updating profile', 'danger');
+            });
+            
+            if (response.data.success) {
+                showAlert(response.data.message, 'success');
+            } else {
+                showAlert(response.data.message || 'An error occurred', 'danger');
             }
+        } catch (error) {
+            showAlert(error.response?.data?.message || 'An error occurred while updating profile', 'danger');
         }
-    </script>
-</body>
-</html>
+    }
+</script>
+{% endblock %}
