@@ -8,7 +8,7 @@ body {
 
 .sidebar {
   width: 250px;
-  /* background: linear-gradient(180deg, #2c3e50 0%, #3498db 100%); */
+  background: linear-gradient(180deg, #ffffff 0%, #fcfeff 100%);
   color: black;
   transition: transform 0.3s ease;
   position: fixed;
@@ -73,14 +73,14 @@ body {
     transition: height 0.3s ease;
 }
 
-.toggle-block.active {
-    /* height: 60px; */
-}
+/* .toggle-block.active {
+    height: 60px;
+} */
 
 .toggle-btn {
     display: none;
-    background: linear-gradient(90deg, #3498db, #2c3e50);
-    color: white;
+    /* background: linear-gradient(90deg, #3498db, #2c3e50);
+    color: white; */
     padding: 10px 15px;
     cursor: pointer;
     border-radius: 5px;

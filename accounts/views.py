@@ -391,15 +391,16 @@ def change_password(request):
 def update_profile(request):
     if request.method == 'POST':
         try:
+            data = json.loads(request.body)
             user_id = request.session['user_data'].get('user_id')
             user_credential = UserCredential.objects.get(id=user_id)
             user_profile = user_credential.user_profile
             
             # Update profile information
-            user_profile.first_name = request.POST.get('first_name')
-            user_profile.middle_name = request.POST.get('middle_name')
-            user_profile.last_name = request.POST.get('last_name')
-            user_profile.birthdate = request.POST.get('birthdate')
+            user_profile.first_name = data.get('first_name')
+            user_profile.middle_name = data.get('middle_name')
+            user_profile.last_name = data.get('last_name')
+            user_profile.birthdate = data.get('birthdate')
             user_profile.save()
             
             return JsonResponse({
