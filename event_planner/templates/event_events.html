@@ -1,0 +1,325 @@
+{% extends 'event_base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block local_css %} 
+
+      <style>
+        .event-card {
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            transition: box-shadow 0.2s;
+        }
+        .event-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+        }
+        .event-img {
+            border-radius: 12px 12px 0 0;
+            object-fit: cover;
+            height: 180px;
+        }
+        .search-bar {
+            max-width: 500px;
+            margin: 0 auto 32px auto;
+        }
+      </style>
+{% endblock %}
+
+{% block content %} 
+
+<div class="text-center mb-4">
+    <h1 class="fw-bold mb-2">🎉 Local Events</h1>
+    <p class="text-muted">Find and track concerts happening near you. Explore, attend, and enjoy the local music scene!</p>
+</div>
+
+<div class="row g-4 mb-5 pe-0 pe-md-5">
+  <div class="container d-flex alig-items-center justify-content-between mt-5">
+    <h4 class=""><i class="bi bi-calendar-week"></i> Your Events</h4>
+    <button class="btn btn-sm btn-primary mb-0" data-bs-toggle="modal" data-bs-target="#addEventModal">
+      <i class="bi bi-plus-circle"></i> Add Event
+    </button>
+  </div>
+    <!-- Example event cards, replace with dynamic content -->
+    <div class="col-md-4">
+        <div class="card event-card">
+            <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" class="card-img-top event-img" alt="Concert">
+            <div class="card-body">
+                <h5 class="card-title">Summer Beats Festival</h5>
+                <p class="card-text text-muted mb-1"><i class="bi bi-geo-alt"></i> Central Park</p>
+                <p class="card-text"><small class="text-muted"><i class="bi bi-calendar-event"></i> June 30, 2025</small></p>
+                <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card event-card">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" class="card-img-top event-img" alt="Concert">
+            <div class="card-body">
+                <h5 class="card-title">Jazz Night Live</h5>
+                <p class="card-text text-muted mb-1"><i class="bi bi-geo-alt"></i> Blue Note Club</p>
+                <p class="card-text"><small class="text-muted"><i class="bi bi-calendar-event"></i> July 5, 2025</small></p>
+                <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card event-card">
+            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=400&q=80" class="card-img-top event-img" alt="Concert">
+            <div class="card-body">
+                <h5 class="card-title">Indie Rock Night</h5>
+                <p class="card-text text-muted mb-1"><i class="bi bi-geo-alt"></i> The Underground</p>
+                <p class="card-text"><small class="text-muted"><i class="bi bi-calendar-event"></i> July 12, 2025</small></p>
+                <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<h4 class="mb-3">Event Locations</h4>
+
+<div class="map-container container">
+    <div id="map" style="height: 600px; width: 100%;"></div>
+    </div>
+</div>
+
+<!-- Reusable Modal -->
+<div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="markerModalLabel">Marker Title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="markerModalBody">
+        Marker content here...
+      </div>
+    </div>
+  </div>
+</div>  
+
+<!-- Modal Form -->
+<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="eventForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addEventModalLabel">Add New Event</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body row g-3">
+
+          <!-- Event Details -->
+          <div class="col-md-6">
+            <label>Event Name</label>
+            <input type="text" class="form-control" name="event_name" required>
+          </div>
+          <div class="col-md-6">
+            <label>Event Description</label>
+            <input type="textbox" class="form-control" name="event_name" required>
+          </div>
+          <div class="col-md-6">
+            <label>Event Keywords</label>
+            <input type="text" class="form-control" name="event_name" required>
+          </div>
+
+          <div class="col-md-6">
+            <label>Event Date</label>
+            <input type="datetime-local" class="form-control" name="event_date" required>
+          </div>
+
+          <!-- Address -->
+          <!-- Map Area -->
+      <div class="col-12">
+        <label>Select Location on Map</label>
+        <div id="formMap" style="height: 300px; border: 1px solid #ccc;"></div>
+      </div>
+
+      <!-- Auto-Filled Address Fields -->
+      <div class="col-md-6">
+        <label>Street Address</label>
+        <input type="text" class="form-control" name="street_address" readonly>
+      </div>
+      <div class="col-md-6">
+        <label>Barangay</label>
+        <input type="text" class="form-control" name="barangay" readonly>
+      </div>
+      <div class="col-md-4">
+        <label>City</label>
+        <input type="text" class="form-control" name="city" readonly>
+      </div>
+      <div class="col-md-4">
+        <label>Country</label>
+        <input type="text" class="form-control" name="country" readonly>
+      </div>
+      <div class="col-md-4">
+        <label>ZIP Code</label>
+        <input type="text" class="form-control" name="zip_code" readonly>
+      </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success"><i class="bi bi-floppy"></i> Save Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block local_js %} 
+
+<script>
+  let mainMap, formMap, selectedMarker;
+
+  function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  }
+
+  function initMainMap() {
+    mainMap = L.map('map').setView([11.2759193, 125.0117496], 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(mainMap);
+
+    const markers = [
+      {
+        lat: 11.2759,
+        lng: 125.0117,
+        title: 'Location A',
+        content: 'This is the detail for Location A.'
+      },
+      {
+        lat: 11.29,
+        lng: 125.02,
+        title: 'Location B',
+        content: 'Information about Location B goes here.'
+      },
+      {
+        lat: 11.26,
+        lng: 125.00,
+        title: 'Location C',
+        content: 'More info about Location C.'
+      }
+    ];
+
+    markers.forEach(data => {
+      const marker = L.marker([data.lat, data.lng]).addTo(mainMap);
+      marker.on('click', () => {
+        document.getElementById('markerModalLabel').textContent = data.title;
+        document.getElementById('markerModalBody').textContent = data.content;
+
+        const modal = new bootstrap.Modal(document.getElementById('markerModal'));
+        modal.show();
+      });
+    });
+  }
+
+  function initFormMap() {
+    formMap = L.map('formMap').setView([11.2759, 125.0117], 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(formMap);
+
+    formMap.on('click', async function (e) {
+      const lat = e.latlng.lat;
+      const lon = e.latlng.lng;
+
+      if (selectedMarker) formMap.removeLayer(selectedMarker);
+      selectedMarker = L.marker([lat, lon]).addTo(formMap);
+
+      try {
+        const res = await axios.get('https://nominatim.openstreetmap.org/reverse', {
+          params: { format: 'json', lat, lon }
+        });
+
+        const addr = res.data.address;
+
+        document.querySelector('[name="street_address"]').value = addr.road || '';
+        document.querySelector('[name="barangay"]').value = addr.suburb || addr.village || '';
+        document.querySelector('[name="city"]').value = addr.city || addr.town || addr.municipality || '';
+        document.querySelector('[name="country"]').value = addr.country || '';
+        document.querySelector('[name="zip_code"]').value = addr.postcode || '';
+
+        // Store lat/lon on form
+        const form = document.getElementById('eventForm');
+        form.dataset.lat = lat;
+        form.dataset.lon = lon;
+
+      } catch (err) {
+        alert("Reverse geocoding failed.");
+      }
+    });
+  }
+
+  document.getElementById("eventForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const lat = form.dataset.lat;
+    const lon = form.dataset.lon;
+
+    if (!lat || !lon) {
+      alert("Please select a location on the map.");
+      return;
+    }
+
+    const postData = {
+      event_name: formData.get("event_name"),
+      event_date: formData.get("event_date"),
+
+      street_address: formData.get("street_address"),
+      barangay: formData.get("barangay"),
+      city: formData.get("city"),
+      country: formData.get("country"),
+      zip_code: formData.get("zip_code"),
+
+      lat: parseFloat(lat),
+      long: parseFloat(lon),
+    };
+
+    try {
+      await axios.post("/event_planner/events/create", postData, {
+        headers: {
+          "X-CSRFToken": getCSRFToken(),
+        }
+      });
+      alert("Event created successfully!");
+
+      form.reset();
+      form.dataset.lat = "";
+      form.dataset.lon = "";
+
+      const modal = bootstrap.Modal.getInstance(document.getElementById('addEventModal'));
+      modal.hide();
+
+      if (selectedMarker) {
+        formMap.removeLayer(selectedMarker);
+        selectedMarker = null;
+      }
+
+    } catch (error) {
+      console.error(error);
+      alert("Failed to add event.");
+    }
+  });
+
+  document.getElementById('addEventModal').addEventListener('shown.bs.modal', function () {
+    setTimeout(() => {
+      if (!formMap) {
+        initFormMap();
+      } else {
+        formMap.invalidateSize();
+      }
+    }, 200);
+  });
+
+
+  initMainMap();
+</script>
+{% endblock %}
