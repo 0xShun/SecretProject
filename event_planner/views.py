@@ -72,8 +72,4 @@ def create_events(request):
             zip_code=data['zip_code']
         )
 
-<<<<<<< HEAD
-        # return JsonResponse({'message': 'Event created successfully!'})
-=======
         return JsonResponse({'message': 'Event created successfully!'})
->>>>>>> 96fa0e8175714b36a4a980aa29a58a214abc6ff3
