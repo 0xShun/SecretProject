@@ -56,7 +56,35 @@
               {{ event.event_date|date:"F d, Y H:i" }}
             </small>
           </p>
-          <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
+
+            <button 
+              class="btn btn-outline-primary btn-sm" 
+              data-bs-toggle="modal" 
+              data-bs-target="#eventModal{{ event.id }}">
+              View Details
+            </button>
+        </div>
+      </div>
+    </div>
+
+     <div class="modal fade" id="eventModal{{ event.id }}" tabindex="-1" aria-labelledby="eventModalLabel{{ event.id }}" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="eventModalLabel{{ event.id }}">{{ event.event_name }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p><strong>Organizer:</strong> {{ event.event_organizer }}</p>
+            <p><strong>Description:</strong> {{ event.event_description }}</p>
+            <p><strong>Date:</strong> {{ event.event_date|date:"F d, Y H:i" }}</p>
+            <p><strong>Address:</strong>
+              {{ event.address.barangay }},
+              {{ event.address.city }},
+              {{ event.address.country }} 
+            </p>
+            <p><strong>Coordinates:</strong> {{ event.location.lat }}, {{ event.location.long }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -66,39 +94,6 @@
     </div>
   {% endfor %}
     <!-- Example event cards, replace with dynamic content -->
-    <div class="col-md-4">
-        <div class="card event-card">
-            <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" class="card-img-top event-img" alt="Concert">
-            <div class="card-body">
-                <h5 class="card-title">Summer Beats Festival</h5>
-                <p class="card-text text-muted mb-1"><i class="bi bi-geo-alt"></i> Central Park</p>
-                <p class="card-text"><small class="text-muted"><i class="bi bi-calendar-event"></i> June 30, 2025</small></p>
-                <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card event-card">
-            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" class="card-img-top event-img" alt="Concert">
-            <div class="card-body">
-                <h5 class="card-title">Jazz Night Live</h5>
-                <p class="card-text text-muted mb-1"><i class="bi bi-geo-alt"></i> Blue Note Club</p>
-                <p class="card-text"><small class="text-muted"><i class="bi bi-calendar-event"></i> July 5, 2025</small></p>
-                <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card event-card">
-            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=400&q=80" class="card-img-top event-img" alt="Concert">
-            <div class="card-body">
-                <h5 class="card-title">Indie Rock Night</h5>
-                <p class="card-text text-muted mb-1"><i class="bi bi-geo-alt"></i> The Underground</p>
-                <p class="card-text"><small class="text-muted"><i class="bi bi-calendar-event"></i> July 12, 2025</small></p>
-                <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
-            </div>
-        </div>
-    </div>
 </div>
 
 
@@ -118,7 +113,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" alt="">
+        <img class="w-100" src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" alt="">
         <div id="markerModalBody">
 
         </div>
@@ -194,6 +189,8 @@
     </div>
   </div>
 </div>
+
+
 {% endblock %}
 
 
@@ -209,6 +206,7 @@
       date.setHours(hour, minute);
       return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
   }
+
 
   function formatDate(dateStr) {
     const [year, month, day] = dateStr.split('-');
@@ -272,7 +270,8 @@ async function initMainMap() {
     console.error('Failed to load event locations', err);
   }
 }
-  function initFormMap() {
+  
+function initFormMap() {
     formMap = L.map('formMap').setView([11.2759, 125.0117], 12);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -377,5 +376,22 @@ async function initMainMap() {
 
 
   initMainMap();
+  document.addEventListener('DOMContentLoaded', function () {
+  var eventDetailModal = document.getElementById('eventDetailModal');
+  eventDetailModal.addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget;
+    var eventData = JSON.parse(button.getAttribute('data-event'));
+
+    document.getElementById('modalEventName').textContent = eventData.name;
+    document.getElementById('modalEventDescription').textContent = eventData.description;
+    document.getElementById('modalEventDate').textContent = eventData.date;
+    document.getElementById('modalEventTime').textContent = eventData.time;
+    document.getElementById('modalEventStreet').textContent = eventData.street;
+    document.getElementById('modalEventBarangay').textContent = eventData.barangay;
+    document.getElementById('modalEventCity').textContent = eventData.city;
+    document.getElementById('modalEventCountry').textContent = eventData.country;
+    document.getElementById('modalEventZip').textContent = eventData.zip;
+  });
+});
 </script>
 {% endblock %}

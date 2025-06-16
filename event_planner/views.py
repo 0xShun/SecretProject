@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.utils import timezone
 from .models import Event, EventAddress, EventLocation
 from accounts.models import UserProfile, UserCredential
 from django.views.decorators.csrf import csrf_exempt
@@ -41,7 +42,16 @@ def event_dashboard(request):
 
 def event_home(request):
 
-    return render(request, 'event_home.html')
+    events = (
+        Event.objects
+        .select_related('location', 'event_organizer')
+        .prefetch_related('addresses')
+        .filter(event_date__gte=timezone.now())
+        .order_by('event_date')[:3]
+    )
+    print(events)
+    # You can now pass all event info to the template
+    return render(request, 'event_home.html', {'events': events})
 
 def event_events(request):
     user = get_object_or_404(UserProfile, pk=1)  # Replace pk=1 with request.user logic in production
@@ -53,6 +63,7 @@ def event_events(request):
     for event in user_events:
         event.address = address_map.get(event.id)
     return render(request, 'event_events.html', {'user_events': user_events})
+
 
 def create_events(request):
     if request.method == 'POST':
