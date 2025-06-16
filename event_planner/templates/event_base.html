@@ -27,7 +27,7 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="sidebar-header">
-         Event Planner
+         <i class="bi bi-palette"></i> ArtScene
          <span class="close-btn" onclick="toggleSidebar()"><i class="bi bi-x"></i></span>
       </div>
       <a href="#"><i class="bi bi-house-door"></i> Dashboard</a>
@@ -38,10 +38,9 @@
 
 
     <!-- Main Content -->
-    <div class="content container">
+    <div class="content container-md">
         <div class="toggle-block" id="toggleBlock"></div>
         <span class="toggle-btn" id="toggleBtn" onclick="toggleSidebar()"><i class="bi bi-list"></i></span>
-        <br><br>
         {% block content %} {% endblock %}
     </div>
 
