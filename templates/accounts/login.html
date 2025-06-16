@@ -184,7 +184,7 @@
                     showAlert(response.data.message, 'success');
                     // Redirect to profile page after 1 second
                     setTimeout(() => {
-                        window.location.href = "{% url 'profile' %}";
+                        window.location.href = "{% url 'index' %}";
                     }, 1000);
                 } else {
                     showAlert(response.data.message || 'An error occurred', 'danger');
