@@ -5,7 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> {% block title %} ArtScene - Local Events {% endblock %}</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>ArtScene - {% block title %} {% endblock %}</title>
     
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
@@ -18,6 +19,9 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <!-- Custom CSS -->
      <link rel="stylesheet" href="{% static 'event_planner/css/sidebar.css' %}">
      {% block local_css %}{% endblock %}
@@ -26,13 +30,13 @@
     
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-      <div class="sidebar-header">
+      <div class="sidebar-header text-info">
          <i class="bi bi-palette"></i> ArtScene
          <span class="close-btn" onclick="toggleSidebar()"><i class="bi bi-x"></i></span>
       </div>
-      <a href="#"><i class="bi bi-house-door"></i> Dashboard</a>
-      <a href="#"><i class="bi bi-people"></i> Users</a>
-      <a href="#"><i class="bi bi-gear"></i> Settings</a>
+      <a href="{% url 'event_home' %}"><i class="bi bi-house-door"></i> Home</a>
+      <a href="{% url 'event_events' %}"><i class="bi bi-calendar-event"></i> Events</a>
+      <a href="#"><i class="bi bi-gear"></i> Profile</a>
       <a href="#"><i class="bi bi-box-arrow-right"></i> Logout</a>
    </div>
 

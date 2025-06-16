@@ -1,6 +1,6 @@
 {% extends 'event_base.html' %}
 
-{% block title %} Events - Home {% endblock %}
+{% block title %} Home {% endblock %}
 
 {% block local_css %} 
 
@@ -39,8 +39,47 @@
     </div>
 </form>
 
-<h4 class="mb-3">Featured Events</h4>
-<div class="row g-4 mb-5 pe-5">
+<h4 class="mb-3"><i class="bi bi-calendar"></i> Featured Events</h4>
+<div class="row g-4 mb-5 pe-0 pe-md-5">
+    <!-- Example event cards, replace with dynamic content -->
+    <div class="col-md-4">
+        <div class="card event-card">
+            <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" class="card-img-top event-img" alt="Concert">
+            <div class="card-body">
+                <h5 class="card-title">Summer Beats Festival</h5>
+                <p class="card-text text-muted mb-1"><i class="bi bi-geo-alt"></i> Central Park</p>
+                <p class="card-text"><small class="text-muted"><i class="bi bi-calendar-event"></i> June 30, 2025</small></p>
+                <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card event-card">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" class="card-img-top event-img" alt="Concert">
+            <div class="card-body">
+                <h5 class="card-title">Jazz Night Live</h5>
+                <p class="card-text text-muted mb-1"><i class="bi bi-geo-alt"></i> Blue Note Club</p>
+                <p class="card-text"><small class="text-muted"><i class="bi bi-calendar-event"></i> July 5, 2025</small></p>
+                <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card event-card">
+            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=400&q=80" class="card-img-top event-img" alt="Concert">
+            <div class="card-body">
+                <h5 class="card-title">Indie Rock Night</h5>
+                <p class="card-text text-muted mb-1"><i class="bi bi-geo-alt"></i> The Underground</p>
+                <p class="card-text"><small class="text-muted"><i class="bi bi-calendar-event"></i> July 12, 2025</small></p>
+                <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<h4 class="mb-3"><i class="bi bi-book"></i> Featured Books</h4>
+<div class="row g-4 mb-5 pe-0 pe-md-5">
     <!-- Example event cards, replace with dynamic content -->
     <div class="col-md-4">
         <div class="card event-card">
@@ -79,7 +118,7 @@
 
 <h4 class="mb-3">Concert Locations</h4>
 
-<div class="map-container">
+<div class="map-container container">
     <div id="map" style="height: 600px; width: 100%;"></div>
     </div>
 </div>
