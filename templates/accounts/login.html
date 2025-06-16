@@ -3,50 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <!-- Latest Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Sign In Form</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 1.2rem;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1.4rem;
+            letter-spacing: 0.8px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #34495e;
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 0.5rem;
+            font-size: 0.85rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #6e8efb;
+            box-shadow: 0 0 6px rgba(110, 142, 251, 0.4);
+            outline: none;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.6rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 6px;
+            background: linear-gradient(to right, #6e8efb, #a777e3);
+            border: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 12px rgba(110, 142, 251, 0.5);
+        }
+
+        .form-text {
+            color: #7f8c8d;
+            font-size: 0.7rem;
+            margin-top: 0.2rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem !important;
+        }
+
+        .text-center a {
+            font-size: 0.8rem;
+            color: #6e8efb;
+        }
+
+        .text-center a:hover {
+            color: #a777e3;
+        }
+
+        .alert {
+            margin-bottom: 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+    </style>
 </head>
+
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Login</h3>
-                    </div>
-                    <div class="card-body">
-                        <div id="alertContainer"></div>
-                        
-                        <form id="loginForm" onsubmit="handleSubmit(event)">
-                            {% csrf_token %}
-                            
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
+    <!-- Include Preloader Component -->
+    {% include 'components/preloader.html' %}
 
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Login</button>
-                            </div>
-
-                            <div class="mt-3 text-center">
-                                <a href="{% url 'register' %}" class="text-decoration-none">Don't have an account? Register</a>
-                                <br>
-                                <a href="{% url 'forgot_password' %}" class="text-decoration-none">Forgot Password?</a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+    <div class="form-container">
+        <h2>Login Account</h2>
+        <div id="alertContainer"></div>
+        <form id="loginForm" onsubmit="handleSubmit(event)">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
             </div>
-        </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Sign In</button>
+            <div class="mt-3 text-center">
+                <a href="{% url 'register' %}" class="text-decoration-none">Don't have an account? Register</a>
+            </div>
+            <div class="mt-2 text-center">
+                <a href="{% url 'forgot_password' %}" class="text-decoration-none">Forgot Password?</a>
+            </div>
+        </form>
     </div>
 
     <!-- Latest Bootstrap JS Bundle with Popper -->
@@ -74,7 +166,11 @@
             
             const form = event.target;
             const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
+            
+            const data = {
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
             
             try {
                 const response = await axios.post('{% url "login" %}', data, {
@@ -86,15 +182,15 @@
                 
                 if (response.data.success) {
                     showAlert(response.data.message, 'success');
-                    // Redirect to profile page after 2 seconds
+                    // Redirect to profile page after 1 second
                     setTimeout(() => {
-                        window.location.href = '{% url "profile" %}';
-                    }, 2000);
+                        window.location.href = "{% url 'profile' %}";
+                    }, 1000);
                 } else {
                     showAlert(response.data.message || 'An error occurred', 'danger');
                 }
             } catch (error) {
-                showAlert(error.response?.data?.message || 'An error occurred during login', 'danger');
+                showAlert(error.response?.data?.message || 'An error occurred', 'danger');
             }
         }
     </script>
