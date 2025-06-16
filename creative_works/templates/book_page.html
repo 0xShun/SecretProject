@@ -1,0 +1,45 @@
+{% extends 'creative_base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <!-- Book Title -->
+            <h1 class="mb-2">The Placeholder Chronicles</h1>
+
+            <!-- Author -->
+            <p class="text-muted">by Juan Dela Cruz</p>
+
+            <!-- Uploader & Upload Date -->
+            <div class="mb-3">
+                <small class="text-secondary">
+                    Uploaded by <strong>placeholder_user</strong> on June 16, 2025, 10:00 AM
+                </small>
+            </div>
+
+            <!-- Description -->
+            <hr>
+            <h5 class="mt-4">Description</h5>
+            <p>
+                This is a placeholder description for the book. It provides a brief summary of the book's contents, themes, and unique features.
+                The actual description will go here once the database is populated.
+            </p>
+
+            <!-- Content -->
+            <hr>
+            <h5 class="mt-4">Content</h5>
+            <div class="book-content p-3 bg-light rounded" style="white-space: pre-wrap;">
+                Chapter 1: The Beginning  
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+                Vivamus lacinia odio vitae vestibulum vestibulum.  
+
+                Chapter 2: The Conflict  
+                Cras vehicula, mi a tincidunt feugiat, massa sapien faucibus eros, ut cursus erat nisl non sapien.  
+
+                Chapter 3: The Resolution  
+                Integer in justo nec elit gravida dapibus. Curabitur nec lacus eget nunc elementum feugiat.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

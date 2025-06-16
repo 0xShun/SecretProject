@@ -1,0 +1,69 @@
+{% extends 'creative_base.html' %}
+
+{% block title %}Books - Library{% endblock %}
+
+{% block local_css %}
+<style>
+    .book-card {
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        transition: box-shadow 0.2s;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .book-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .book-cover {
+        height: 220px;
+        object-fit: cover;
+        border-radius: 12px 12px 0 0;
+        background-color: #f0f0f0;
+    }
+
+    .book-body {
+        padding: 1rem;
+        flex-grow: 1;
+    }
+
+    .book-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .book-author {
+        color: #555;
+        font-size: 0.95rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="text-center mb-4">Book Collection</h2>
+
+    <div class="row">
+        {% for i in "123456" %}
+        <div class="col-sm-6 col-md-4 col-lg-3 d-flex mb-4">
+            <div class="card book-card w-100">
+                <div class="book-cover d-flex justify-content-center align-items-center text-muted">
+                    <span class="text-muted">No Image</span>
+                </div>
+                <div class="book-body">
+                    <div class="book-title">Sample Book Title {{ forloop.counter }}</div>
+                    <div class="book-author">Author Name</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block local_js %}
+<!-- Optional JS can go here -->
+{% endblock %}
