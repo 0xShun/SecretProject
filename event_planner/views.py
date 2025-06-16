@@ -13,12 +13,24 @@ def event_locations_api(request):
     events = Event.objects.select_related('location').all()
     data = []
     for event in events:
+        try:
+            address = EventAddress.objects.get(event=event)
+            full_address = f"{address.street_address}, {address.barangay}, {address.city}, {address.country}, {address.zip_code}"
+            barangay = address.barangay
+            city = address.city
+        except EventAddress.DoesNotExist:
+            full_address = ""
+            barangay = ""
+            city = ""
         data.append({
             'event_name': event.event_name,
+            'event_description': getattr(event, 'event_description', ''),
             'event_date': event.event_date.strftime('%Y-%m-%d %H:%M'),
             'lat': event.location.lat,
             'lng': event.location.long,
-            # Add more fields as needed
+            'full_address': full_address,
+            'barangay': barangay,
+            'city': city,
         })
     return JsonResponse({'events': data})
 
@@ -32,10 +44,15 @@ def event_home(request):
     return render(request, 'event_home.html')
 
 def event_events(request):
-    user = get_object_or_404(UserProfile, pk=1)
-    user_events = Event.objects.filter(event_organizer=user)
+    user = get_object_or_404(UserProfile, pk=1)  # Replace pk=1 with request.user logic in production
+    user_events = Event.objects.filter(event_organizer=user).select_related('location')
+    # Prefetch addresses for all events
+    addresses = EventAddress.objects.filter(event__in=user_events)
+    address_map = {addr.event_id: addr for addr in addresses}
+    # Attach address to each event
+    for event in user_events:
+        event.address = address_map.get(event.id)
     return render(request, 'event_events.html', {'user_events': user_events})
-
 
 def create_events(request):
     if request.method == 'POST':
