@@ -15,7 +15,7 @@ class UserProfile(models.Model):
 
 
 class UserCredential(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='user_profile')
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='user_profile')
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     user_type = models.CharField(max_length=50)
