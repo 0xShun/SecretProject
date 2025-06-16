@@ -1,0 +1,15 @@
+# Core ML Service Dependencies
+requests>=2.31.0
+Pillow>=10.0.0
+celery>=5.3.0
+
+# Environment and Configuration
+python-dotenv>=1.0.0
+
+# Optional Dependencies
+redis>=5.0.0  # If using Redis as Celery broker
+django-celery-results>=2.5.1  # For storing Celery task results in Django 
+
+transformers==4.37.2
+torch==2.2.0
+sentence-transformers==2.2.2
