@@ -73,6 +73,7 @@ def create_events(request):
         # # Create event
         event = Event.objects.create(
             location=location,
+            event_description=data['description'],
             event_name=data['event_name'],
             event_organizer=user,
             event_date=data['event_date'],

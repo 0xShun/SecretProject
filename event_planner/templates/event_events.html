@@ -146,7 +146,7 @@
           </div>
           <div class="col-md-6">
             <label>Event Description</label>
-            <input type="textbox" class="form-control" name="event_name" required>
+            <input type="textbox" class="form-control" name="description" required>
           </div>
           <div class="col-md-6">
             <label>Event Keywords</label>
@@ -327,6 +327,7 @@ async function initMainMap() {
     const postData = {
       event_name: formData.get("event_name"),
       event_date: formData.get("event_date"),
+      description: formData.get("description"),
 
       street_address: formData.get("street_address"),
       barangay: formData.get("barangay"),
