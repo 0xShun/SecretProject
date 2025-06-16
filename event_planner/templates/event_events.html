@@ -39,6 +39,32 @@
       <i class="bi bi-plus-circle"></i> Add Event
     </button>
   </div>
+  {% for event in user_events %}
+    <div class="col-md-4">
+      <div class="card event-card">
+        <!-- If you have an image field, use it; else use a placeholder -->
+        <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" class="card-img-top event-img" alt="Concert">
+        <div class="card-body">
+          <h5 class="card-title">{{ event.event_name }}</h5>
+          <p class="card-text text-muted mb-1">
+            <i class="bi bi-geo-alt"></i>
+            {{ event.address.barangay }}, {{ event.address.city }}
+          </p>
+          <p class="card-text">
+            <small class="text-muted">
+              <i class="bi bi-calendar-event"></i>
+              {{ event.event_date|date:"F d, Y H:i" }}
+            </small>
+          </p>
+          <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-12">
+      <div class="alert alert-info text-center">You have no events yet.</div>
+    </div>
+  {% endfor %}
     <!-- Example event cards, replace with dynamic content -->
     <div class="col-md-4">
         <div class="card event-card">
@@ -91,8 +117,11 @@
         <h1 class="modal-title fs-5" id="markerModalLabel">Marker Title</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body" id="markerModalBody">
-        Marker content here...
+      <div class="modal-body">
+        <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" alt="">
+        <div id="markerModalBody">
+
+        </div>
       </div>
     </div>
   </div>
@@ -173,50 +202,76 @@
 <script>
   let mainMap, formMap, selectedMarker;
 
+    // If you have a time string like "14:30"
+  function to12Hour(time24) {
+      const [hour, minute] = time24.split(':');
+      const date = new Date();
+      date.setHours(hour, minute);
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+  }
+
+  function formatDate(dateStr) {
+    const [year, month, day] = dateStr.split('-');
+    const dateObj = new Date(year, month - 1, day);
+    return dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+
   function getCSRFToken() {
     return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   }
 
-  function initMainMap() {
-    mainMap = L.map('map').setView([11.2759193, 125.0117496], 12);
+async function initMainMap() {
+  mainMap = L.map('map').setView([11.2759193, 125.0117496], 12);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(mainMap);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(mainMap);
 
-    const markers = [
-      {
-        lat: 11.2759,
-        lng: 125.0117,
-        title: 'Location A',
-        content: 'This is the detail for Location A.'
-      },
-      {
-        lat: 11.29,
-        lng: 125.02,
-        title: 'Location B',
-        content: 'Information about Location B goes here.'
-      },
-      {
-        lat: 11.26,
-        lng: 125.00,
-        title: 'Location C',
-        content: 'More info about Location C.'
-      }
-    ];
-
-    markers.forEach(data => {
-      const marker = L.marker([data.lat, data.lng]).addTo(mainMap);
+  // Fetch event locations from API
+  try {
+    const res = await axios.get('/event_planner/events/locations/');
+    const events = res.data.events;
+    events.forEach(event => {
+      const marker = L.marker([event.lat, event.lng]).addTo(mainMap);
       marker.on('click', () => {
-        document.getElementById('markerModalLabel').textContent = data.title;
-        document.getElementById('markerModalBody').textContent = data.content;
-
-        const modal = new bootstrap.Modal(document.getElementById('markerModal'));
-        modal.show();
-      });
-    });
+  // Exclude these fields
+  const exclude = [
+    'event_name', 'event_description', 'event_date',
+    'full_address', 'barangay', 'city', 'lat', 'lng'
+  ];
+  let details = '';
+  for (const [key, value] of Object.entries(event)) {
+    if (!exclude.includes(key) && value) {
+      // Format key to be more readable
+      const label = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      details += `<div><strong>${label}:</strong> ${value}</div>`;
+    }
   }
+  const [date, time] = event.event_date.split(' ');
+  const time12hr = to12Hour(time);
+  const formattedDate = formatDate(date);
 
+  // Always show the main info at the top
+  document.getElementById('markerModalLabel').textContent = event.event_name;
+  document.getElementById('markerModalBody').innerHTML = `
+    <div><strong>Description:</strong> ${event.event_description}</div>
+      <div><strong>Date:</strong> ${formattedDate}</div>
+  <div><strong>Time:</strong> ${time12hr}</div>
+    <div><strong>Address:</strong> ${event.full_address}</div>
+    <div><strong>Barangay:</strong> ${event.barangay}</div>
+    <div><strong>City:</strong> ${event.city}</div>
+    <hr>
+    ${details}
+  `;
+  const modal = new bootstrap.Modal(document.getElementById('markerModal'));
+  modal.show();
+});
+    });
+  } catch (err) {
+    console.error('Failed to load event locations', err);
+  }
+}
   function initFormMap() {
     formMap = L.map('formMap').setView([11.2759, 125.0117], 12);
 
