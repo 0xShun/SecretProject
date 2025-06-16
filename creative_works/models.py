@@ -15,6 +15,7 @@ class Book(models.Model):
     upload_date = models.DateTimeField(auto_now_add=True)
     description = models.TextField()
     content = models.TextField()
+    path = models.TextField()    
 
     def __str__(self):
         return self.title

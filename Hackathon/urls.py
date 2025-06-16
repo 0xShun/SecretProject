@@ -16,7 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+<<<<<<< HEAD
+from django.conf import settings
+from django.conf.urls.static import static
+=======
 from event_planner import views
+>>>>>>> 8eceb3107085b7e26d32d7b65f7f9a9b5efb2583
 
 urlpatterns = [
     path('', views.event_home, name='index'),
@@ -24,4 +29,4 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('creative_works/', include('creative_works.urls')),
     path('event_planner/', include('event_planner.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
