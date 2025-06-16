@@ -11,10 +11,15 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
     }
 
     .book-card:hover {
         box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        text-decoration: none;
+        color: inherit;
     }
 
     .book-cover {
@@ -49,7 +54,7 @@
     <div class="row">
         {% for i in "123456" %}
         <div class="col-sm-6 col-md-4 col-lg-3 d-flex mb-4">
-            <div class="card book-card w-100">
+            <a href="{% url 'book_detail' book_id=forloop.counter %}" class="book-card w-100">
                 <div class="book-cover d-flex justify-content-center align-items-center text-muted">
                     <span class="text-muted">No Image</span>
                 </div>
@@ -57,7 +62,7 @@
                     <div class="book-title">Sample Book Title {{ forloop.counter }}</div>
                     <div class="book-author">Author Name</div>
                 </div>
-            </div>
+            </a>
         </div>
         {% endfor %}
     </div>
