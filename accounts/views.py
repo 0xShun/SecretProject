@@ -4,6 +4,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.utils.crypto import get_random_string
 from django.contrib.auth.hashers import make_password, check_password
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
 from .models import UserProfile, UserCredential
 from Hackathon.auth import login_required
 import json
@@ -125,13 +127,24 @@ def register(request):
                 'verification_code': verification_code
             }
             
+            # Prepare email context
+            context = {
+                'is_password_reset': False,
+                'verification_code': verification_code
+            }
+            
+            # Render email template
+            html_message = render_to_string('accounts/email.html', context)
+            
             # Send verification email
-            send_mail(
-                'Your Verification Code',
-                f'Your verification code is: {verification_code}',
+            email = EmailMessage(
+                'Email Subject',
+                html_message,
                 settings.DEFAULT_FROM_EMAIL,
-                [email],
+                [email]
             )
+            email.content_subtype = "html"
+            email.send()
 
             return JsonResponse({
                 'success': True,
@@ -228,13 +241,24 @@ def forgot_password(request):
                     'verification_code': verification_code
                 }
                 
+                # Prepare email context
+                context = {
+                    'is_password_reset': True,
+                    'verification_code': verification_code
+                }
+                
+                # Render email template
+                html_message = render_to_string('accounts/email.html', context)
+                
                 # Send verification email
-                send_mail(
-                    'Password Reset Verification Code',
-                    f'Your password reset verification code is: {verification_code}',
+                email = EmailMessage(
+                    'Password Reset Verification',
+                    html_message,
                     settings.DEFAULT_FROM_EMAIL,
-                    [email],
+                    [email]
                 )
+                email.content_subtype = "html"  # Main content is now text/html
+                email.send()
 
                 return JsonResponse({
                     'success': True,
