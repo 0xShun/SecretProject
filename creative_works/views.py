@@ -1,13 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import BookUploadForm
+from .models import Book
+from Hackathon.auth import login_required
 
 # Create your views here.
-
+@login_required
 def creatives_home(request):
 
     return render(request, 'creative_home.html')
 
+
+@login_required
 def upload_book(request):
     if request.method == 'POST':
         form = BookUploadForm(request.POST, request.FILES)
@@ -19,13 +23,17 @@ def upload_book(request):
             return redirect('book_detail', book_id=book.id)
     else:
         form = BookUploadForm()
-    
+
     return render(request, 'upload_book.html', {'form': form})
 
+
+@login_required
 def book_page(request):
 
     return render(request, 'book_page.html')
 
+
+@login_required
 def book_detail(request, book_id):
     try:
         book = Book.objects.get(id=book_id)
