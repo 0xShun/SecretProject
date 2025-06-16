@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Latest Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">Register</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="alertContainer"></div>
+                        
+                        <form id="registerForm" onsubmit="handleSubmit(event)">
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required 
+                                       minlength="8" pattern=".{8,}" title="Password must be at least 8 characters long">
+                                <div class="form-text">Password must be at least 8 characters long</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="first_name" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="birthdate" class="form-label">Birthdate</label>
+                                <input type="date" class="form-control" id="birthdate" name="birthdate" required>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Register</button>
+                            </div>
+
+                            <div class="text-center mt-3">
+                                <a href="{% url 'login' %}" class="text-decoration-none">Already have an account? Login</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Latest Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            alertContainer.appendChild(alertDiv);
+            
+            // Auto dismiss after 5 seconds
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            // Validate password length
+            const password = formData.get('password');
+            if (password.length < 8) {
+                showAlert('Password must be at least 8 characters long', 'danger');
+                return;
+            }
+            
+            const data = {
+                email: formData.get('email'),
+                password: formData.get('password'),
+                first_name: formData.get('first_name'),
+                last_name: formData.get('last_name'),
+                birthdate: formData.get('birthdate')
+            };
+            
+            try {
+                const response = await axios.post('{% url "register" %}', data, {
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.data.success) {
+                    showAlert(response.data.message, 'success');
+                    // Redirect to verification page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = "{% url 'verify_code' %}";
+                    }, 2000);
+                } else {
+                    showAlert(response.data.message || 'An error occurred', 'danger');
+                }
+            } catch (error) {
+                showAlert(error.response?.data?.message || 'An error occurred', 'danger');
+            }
+        }
+    </script>
+</body>
+</html>
